@@ -1,72 +1,74 @@
-// ===== DATE =====
+// ---------- DATE ----------
 const today = new Date();
-const todayKey = today.toDateString();
+const dateText = today.toDateString();
+document.getElementById("todayDate").innerText = dateText;
 
-document.getElementById("todayDate").innerText =
-  today.toDateString();
+// ---------- STORAGE ----------
+const STORAGE_KEY = "habit-data-v1";
 
-// ===== STORAGE =====
-let data = JSON.parse(localStorage.getItem("habitData")) || {
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
   habits: [],
   logs: {}
 };
 
-if (!data.logs[todayKey]) {
-  data.logs[todayKey] = {};
+const dayKey = today.toISOString().slice(0, 10);
+
+// ---------- SAVE ----------
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function save() {
-  localStorage.setItem("habitData", JSON.stringify(data));
+// ---------- RENDER ----------
+function renderHabits() {
+  const container = document.getElementById("habits");
+  container.innerHTML = "";
+
+  data.habits.forEach((habit) => {
+    const status = data.logs[dayKey]?.[habit] ?? null;
+
+    const div = document.createElement("div");
+    div.className = "habit";
+
+    div.innerHTML = `
+      <div class="habit-name">${habit}</div>
+      <div class="actions">
+        <button class="done ${status === true ? "active" : ""}">Done</button>
+        <button class="not-done ${status === false ? "active" : ""}">Not Done</button>
+      </div>
+    `;
+
+    const [doneBtn, notDoneBtn] = div.querySelectorAll("button");
+
+    doneBtn.onclick = () => setStatus(habit, true);
+    notDoneBtn.onclick = () => setStatus(habit, false);
+
+    container.appendChild(div);
+  });
 }
 
-// ===== ADD HABIT =====
-function addHabit() {
+// ---------- SET STATUS ----------
+function setStatus(habit, value) {
+  if (!data.logs[dayKey]) data.logs[dayKey] = {};
+  data.logs[dayKey][habit] = value;
+  saveData();
+  renderHabits();
+}
+
+// ---------- ADD HABIT ----------
+document.getElementById("addBtn").onclick = () => {
   const input = document.getElementById("habitInput");
   const name = input.value.trim();
+
   if (!name) return;
 
   if (!data.habits.includes(name)) {
     data.habits.push(name);
-    data.logs[todayKey][name] = null;
-    save();
+    saveData();
     renderHabits();
   }
+
   input.value = "";
-}
+};
 
-// ===== MARK DONE / NOT DONE =====
-function markHabit(habit, status) {
-  data.logs[todayKey][habit] = status;
-  save();
-  renderHabits();
-}
-
-// ===== RENDER =====
-function renderHabits() {
-  const container = document.getElementById("habitsSection");
-  container.innerHTML = "";
-
-  data.habits.forEach(habit => {
-    const state = data.logs[todayKey][habit];
-
-    const card = document.createElement("div");
-    card.className = "habitCard";
-
-    card.innerHTML = `
-      <h3>${habit}</h3>
-      <div class="buttons">
-        <button class="done ${state === true ? "active" : ""}"
-          onclick="markHabit('${habit}', true)">Done</button>
-
-        <button class="notdone ${state === false ? "active" : ""}"
-          onclick="markHabit('${habit}', false)">Not Done</button>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-// ===== INIT =====
+// ---------- INIT ----------
 renderHabits();
-
