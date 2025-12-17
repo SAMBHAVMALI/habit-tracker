@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Habit Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="app">
-  <h1 id="todayDate"></h1>
+  <div class="app">
+    <h1 id="todayDate"></h1>
 
-  <!-- Habits render yahan honge -->
-  <div id="habitsSection"></div>
+    <div id="habits"></div>
 
-  <!-- Add habit -->
-  <div class="addHabit">
-    <input id="habitInput" placeholder="Add a habit">
-    <button onclick="addHabit()">Add</button>
+    <div class="add-box">
+      <input id="habitInput" type="text" placeholder="Add a habit" />
+      <button id="addBtn">Add</button>
+    </div>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-
