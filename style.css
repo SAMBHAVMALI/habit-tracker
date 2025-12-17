@@ -1,23 +1,66 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #f5f7fb;
-  color: #333;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
 }
 
 .app {
+  width: 100%;
   max-width: 420px;
-  margin: auto;
   padding: 20px;
 }
 
 h1 {
   text-align: center;
-  font-weight: 500;
-  color: #555;
+  color: #333;
 }
 
-.addHabit {
+.habit {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.habit-name {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.done {
+  background: #b9fbc0;
+}
+
+.not-done {
+  background: #ffccd5;
+}
+
+.active {
+  outline: 2px solid #333;
+}
+
+.add-box {
   display: flex;
   gap: 10px;
   margin-top: 20px;
@@ -26,30 +69,6 @@ h1 {
 input {
   flex: 1;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-
-button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.habitCard {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 14px;
-  margin-top: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-}
-
-.done {
-  background: #c7e8ca;
-  margin-right: 6px;
-}
-
-.notdone {
-  background: #f3c6c6;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
