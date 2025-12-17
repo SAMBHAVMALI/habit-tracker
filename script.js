@@ -1,74 +1,72 @@
-// ---------- DATE ----------
+// ===== DATE =====
 const today = new Date();
-const dateKey = today.toISOString().split("T")[0];
-document.getElementById("date").innerText =
+const todayKey = today.toDateString();
+
+document.getElementById("todayDate").innerText =
   today.toDateString();
 
-// ---------- STORAGE ----------
+// ===== STORAGE =====
 let data = JSON.parse(localStorage.getItem("habitData")) || {
   habits: [],
-  log: {}
+  logs: {}
 };
 
-if (!data.log[dateKey]) {
-  data.log[dateKey] = {};
+if (!data.logs[todayKey]) {
+  data.logs[todayKey] = {};
 }
 
-// ---------- ELEMENTS ----------
-const habitInput = document.getElementById("habitInput");
-const addBtn = document.getElementById("addHabit");
-const habitList = document.getElementById("habitList");
-
-// ---------- SAVE ----------
 function save() {
   localStorage.setItem("habitData", JSON.stringify(data));
 }
 
-// ---------- ADD HABIT ----------
-addBtn.onclick = () => {
-  const name = habitInput.value.trim();
-  if (!name || data.habits.includes(name)) return;
+// ===== ADD HABIT =====
+function addHabit() {
+  const input = document.getElementById("habitInput");
+  const name = input.value.trim();
+  if (!name) return;
 
-  data.habits.push(name);
-  data.log[dateKey][name] = null;
+  if (!data.habits.includes(name)) {
+    data.habits.push(name);
+    data.logs[todayKey][name] = null;
+    save();
+    renderHabits();
+  }
+  input.value = "";
+}
 
-  habitInput.value = "";
+// ===== MARK DONE / NOT DONE =====
+function markHabit(habit, status) {
+  data.logs[todayKey][habit] = status;
   save();
-  render();
-};
+  renderHabits();
+}
 
-// ---------- RENDER ----------
-function render() {
-  habitList.innerHTML = "";
+// ===== RENDER =====
+function renderHabits() {
+  const container = document.getElementById("habitsSection");
+  container.innerHTML = "";
 
   data.habits.forEach(habit => {
-    const status = data.log[dateKey][habit];
+    const state = data.logs[todayKey][habit];
 
     const card = document.createElement("div");
-    card.className = "habit-card";
+    card.className = "habitCard";
 
     card.innerHTML = `
       <h3>${habit}</h3>
       <div class="buttons">
-        <button class="done ${status === true ? "active" : ""}">Done</button>
-        <button class="notdone ${status === false ? "active" : ""}">Not Done</button>
+        <button class="done ${state === true ? "active" : ""}"
+          onclick="markHabit('${habit}', true)">Done</button>
+
+        <button class="notdone ${state === false ? "active" : ""}"
+          onclick="markHabit('${habit}', false)">Not Done</button>
       </div>
     `;
 
-    card.querySelector(".done").onclick = () => {
-      data.log[dateKey][habit] = true;
-      save();
-      render();
-    };
-
-    card.querySelector(".notdone").onclick = () => {
-      data.log[dateKey][habit] = false;
-      save();
-      render();
-    };
-
-    habitList.appendChild(card);
+    container.appendChild(card);
   });
 }
 
-render();
+// ===== INIT =====
+renderHabits();
+
